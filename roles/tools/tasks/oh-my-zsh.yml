@@ -17,3 +17,17 @@
   become: no
   when: not ohmyzsh_installed.stat.exists
 
+- name: Check if zsh-autosuggestions is already installed
+  stat:
+    path: "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+  register: autosuggestions_installed
+  changed_when: false
+
+- name: Install Autosuggestions
+  shell: >
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  args:
+    executable: /bin/bash
+  become: no
+  when: not autosuggestions_installed.stat.exists
+
