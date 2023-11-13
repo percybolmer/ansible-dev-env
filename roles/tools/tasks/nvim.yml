@@ -1,24 +1,31 @@
-- name: Download Neovim AppImage
+- name: Download Neovim tarball
   get_url:
-    url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    dest: "{{ ansible_env.HOME }}/nvim.appimage"
-    mode: '0755'
+    url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+    dest: /tmp/nvim-linux64.tar.gz
 
-- name: Make Neovim AppImage executable
+- name: Create a directory for Neovim
+  become: yes
   file:
-    path: "{{ ansible_env.HOME }}/nvim.appimage"
-    mode: 'u+x'
+    path: /opt/neovim
+    state: directory
 
-- name: Run Neovim AppImage
-  command: "{{ ansible_env.HOME }}/nvim.appimage --version"
-  register: nvim_version
-  changed_when: false
+- name: Extract Neovim tarball
+  become: yes
+  ansible.builtin.unarchive:
+    src: /tmp/nvim-linux64.tar.gz
+    dest: /opt/neovim
+    remote_src: yes
+    extra_opts: [--strip-components=1]
 
-- name: Move Neovim AppImage to ~/bin
-  command: mv "{{ ansible_env.HOME }}/nvim.appimage" "{{ ansible_env.HOME }}/bin/nvim"
-  args:
-    creates: "{{ ansible_env.HOME }}/bin/nvim"
+- name: Link Neovim binary to /usr/local/bin
+  become: yes
+  file:
+    src: /opt/neovim/bin/nvim
+    dest: /usr/local/bin/nvim
+    state: link
 
-- name: Display Neovim version
-  debug:
-    var: nvim_version.stdout
+- name: Remove downloaded Neovim tarball
+  file:
+    path: /tmp/nvim-linux64.tar.gz
+    state: absent
+

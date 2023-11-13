@@ -19,6 +19,7 @@
     rsync_opts:
       - "--exclude=.tmux.conf"
       - "--exclude=.zshrc"
+      - "--exclude=.git"
 
 - name: Copy .tmux.conf to home directory
   copy:
