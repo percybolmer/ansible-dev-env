@@ -1,0 +1,12 @@
+- name: Install packages with brew
+  become: yes
+  community.general.homebrew:
+    name:
+      - git
+      - tmux
+      - wget
+      - zsh
+      - neovim
+    state: present
+  when: ansible_distribution == "MacOSX"
+

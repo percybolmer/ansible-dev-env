@@ -1,0 +1,12 @@
+- name: Check if rustup is already installed
+  shell: command -v rustup
+  register: rustup_installed
+  ignore_errors: yes
+
+- name: Install rustup
+  shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  args:
+    executable: /bin/bash
+  become: yes
+  when: rustup_installed.rc != 0
+

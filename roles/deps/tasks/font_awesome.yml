@@ -1,0 +1,26 @@
+- name: Create fonts directory
+  file:
+    path: "{{ ansible_env.HOME }}/.local/share/fonts"
+    state: directory
+
+- name: Download Font Awesome ZIP
+  get_url:
+    url: https://use.fontawesome.com/releases/v6.4.2/fontawesome-free-6.4.2-desktop.zip
+    dest: "/tmp/fontawesome-free-6.4.2-desktop.zip"
+    mode: '0644'
+
+- name: Extract Font Awesome ZIP
+  unarchive:
+    src: "/tmp/fontawesome-free-6.4.2-desktop.zip"
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: Copy Font Awesome fonts to the fonts directory
+  copy:
+    src: "/tmp/fontawesome-free-6.4.2-desktop/otfs/"
+    dest: "{{ ansible_env.HOME }}/.local/share/fonts"
+    remote_src: yes
+
+- name: Update font cache
+  shell: fc-cache -fv
+  become: yes

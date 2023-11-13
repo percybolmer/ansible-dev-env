@@ -1,0 +1,35 @@
+- name: Install packages with apt
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - git
+      - tmux
+      - wget
+      - i3
+      - fd-find
+      - zsh
+      - polybar
+      # Alacritty deps
+      - cmake
+      - pkg-config
+      - libfreetype6-dev
+      - libfontconfig1-dev
+      - libxcb-xfixes0-dev
+      - libxkbcommon-dev
+      - python3
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install font awesome
+  become: no
+  import_tasks: font_awesome.yml
+
+- name: Install docker
+  become: yes
+  import_tasks: docker.yml
+
+- name: Install minikube & kubernetes
+  become: yes
+  import_tasks: minikube.yml
+
+

@@ -1,0 +1,12 @@
+- name: Install deps for Ubuntu
+  import_tasks: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install deps for macOS using Homebrew
+  import_tasks: macos.yml
+  when: ansible_distribution == "MacOSX"
+
+# General deps that runs on both MacOs and Ubuntu
+- name: Install rustup
+  import_tasks: rustup.yml
+

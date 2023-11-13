@@ -1,0 +1,21 @@
+- name: Install Minikube
+  become: yes
+  block:
+    - name: Download Minikube
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /tmp/minikube-linux-amd64
+        mode: '0755'
+
+    - name: Install Minikube binary
+      command: install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
+      args:
+        creates: /usr/local/bin/minikube
+
+    - name: Remove downloaded Minikube binary
+      file:
+        path: /tmp/minikube-linux-amd64
+        state: absent
+
+    - name: Set Minikube driver to Docker
+      shell: minikube config set driver docker

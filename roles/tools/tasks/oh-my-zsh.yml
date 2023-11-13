@@ -1,0 +1,19 @@
+- name: Change the default shell to Zsh
+  shell: chsh -s $(which zsh)
+  become: yes
+
+- name: Check if Oh My Zsh is already installed
+  stat: 
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+  register: ohmyzsh_installed
+  changed_when: false
+
+- name: Install Oh My Zsh
+  shell: >
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    env ZSH="{{ ansible_env.HOME }}/.oh-my-zsh" RUNZSH=no CHSH=no
+  args:
+    executable: /bin/bash
+  become: no
+  when: not ohmyzsh_installed.stat.exists
+

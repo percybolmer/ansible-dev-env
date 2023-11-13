@@ -1,0 +1,33 @@
+- name: Clone dotfiles repository
+  git:
+    repo: 'https://github.com/percybolmer/dotfiles'
+    dest: '/tmp/dotfiles'
+    clone: yes
+    update: yes
+
+- name: Ensure .config directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.config"
+    state: directory
+    mode: '0755'
+
+- name: Copy dotfiles to .config
+  synchronize:
+    src: '/tmp/dotfiles/'
+    dest: "{{ ansible_env.HOME }}/.config"
+    recursive: yes
+    rsync_opts:
+      - "--exclude=.tmux.conf"
+      - "--exclude=.zshrc"
+
+- name: Copy .tmux.conf to home directory
+  copy:
+    src: '/tmp/dotfiles/.tmux.conf'
+    dest: "{{ ansible_env.HOME }}/.tmux.conf"
+    mode: '0644'
+
+- name: Copy .zshrc to home directory
+  copy:
+    src: '/tmp/dotfiles/.zshrc'
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    mode: '0644'

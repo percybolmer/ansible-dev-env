@@ -1,0 +1,22 @@
+- name: Install Alacritty
+  shell: cargo install alacritty
+  args:
+    executable: /bin/bash
+  become: no  # This should run as the user, not root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_env.USER }}/.cargo/bin"
+
+- name: Copy Alacritty completion script for zsh
+  copy:
+    src: _alacritty
+    dest: "{{ ansible_env.HOME }}/.zsh/completions/"
+  become: no
+
+- name: Set Alacritty as default x-terminal-emulator
+  shell: update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /home/{{ ansible_env.USER }}/.cargo/bin/alacritty 50
+  become: yes
+
+- name: Set Alacritty as the default x-terminal-emulator
+  shell: update-alternatives --set x-terminal-emulator /home/{{ ansible_env.USER }}/.cargo/bin/alacritty
+  become: yes
+

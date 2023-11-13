@@ -1,0 +1,35 @@
+- name: Install kubectl
+  become: yes
+  block:
+    - name: Get the latest stable version of kubectl
+      shell: curl -L -s https://dl.k8s.io/release/stable.txt
+      register: kubectl_version
+      changed_when: false
+
+    - name: Download kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+        dest: /tmp/kubectl
+        mode: '0755'
+
+    - name: Download kubectl checksum
+      get_url:
+        url: "https://dl.k8s.io/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl.sha256"
+        dest: /tmp/kubectl.sha256
+
+    - name: Verify kubectl binary
+      shell: echo "$(cat /tmp/kubectl.sha256)  /tmp/kubectl" | sha256sum --check
+      ignore_errors: yes
+
+    - name: Install kubectl binary
+      command: install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl
+      args:
+        creates: /usr/local/bin/kubectl
+
+    - name: Remove downloaded kubectl binary and checksum
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/kubectl
+        - /tmp/kubectl.sha256

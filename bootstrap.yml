@@ -1,0 +1,10 @@
+---
+- name: Development environment
+  hosts: localhost
+  tasks:
+    - name: Install Deps
+      import_role:
+        name: deps
+    - name: Install tools
+      import_role:
+        name: tools

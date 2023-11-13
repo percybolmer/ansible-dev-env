@@ -1,0 +1,16 @@
+- name: Setup bin folder for user
+  import_tasks: bin.yml
+
+- name: Install Zsh and Oh-my-zsh
+  import_tasks: oh-my-zsh.yml
+
+- name: Install Alacritty
+  import_tasks: alacritty.yml
+
+  # Install nvim only if ubuntu, otherwise it will come from deps
+- name: Install neovim
+  import_tasks: nvim.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: Cloning Dotfiles and adding them
+  import_tasks: dotfiles.yml
