@@ -28,8 +28,13 @@
   become: yes
   import_tasks: docker.yml
 
-- name: Install minikube & kubernetes
+- name: Install minikube
   become: yes
   import_tasks: minikube.yml
+
+- name: Install Kubectl
+  become: yes
+  import_tasks: kubectl.yml
+
 
 
