@@ -16,10 +16,10 @@
     src: '/tmp/dotfiles/'
     dest: "{{ ansible_env.HOME }}/.config"
     recursive: yes
-    rsync_opts:
-      - "--exclude=.tmux.conf"
-      - "--exclude=.zshrc"
-      - "--exclude=.git"
+    #rsync_opts:
+#  - "--exclude=.tmux.conf"
+#      - "--exclude=.zshrc"
+#      - "--exclude=.git"
 
 - name: Copy .tmux.conf to home directory
   copy:
